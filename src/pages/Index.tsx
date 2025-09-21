@@ -1,20 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AgeGate from '@/components/AgeGate';
+import Layout from '@/components/Layout';
 import Hero from '@/components/Hero';
 import Gallery from '@/components/Gallery';
 
 const Index = () => {
-  const [isAgeConfirmed, setIsAgeConfirmed] = useState(false);
+  const [isAgeConfirmed, setIsAgeConfirmed] = useState(() => {
+    return localStorage.getItem('ageConfirmed') === 'true';
+  });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAgeConfirmed) {
+      localStorage.setItem('ageConfirmed', 'true');
+    }
+  }, [isAgeConfirmed]);
 
   if (!isAgeConfirmed) {
     return <AgeGate onConfirm={() => setIsAgeConfirmed(true)} />;
   }
 
   return (
-    <div className="min-h-screen">
+    <Layout>
       <Hero />
       <Gallery />
-    </div>
+    </Layout>
   );
 };
 
